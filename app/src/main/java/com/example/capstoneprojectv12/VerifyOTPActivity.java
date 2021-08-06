@@ -60,6 +60,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
         inputCode4 = findViewById(R.id.inputCode4);
         inputCode5 = findViewById(R.id.inputCode5);
         inputCode6 = findViewById(R.id.inputCode6);
+
         auth = FirebaseAuth.getInstance();
 
         setupOTPInputs();
@@ -92,13 +93,13 @@ public class VerifyOTPActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     buttonVerify.setVisibility(View.INVISIBLE);
 
-                    verifyPhoneNumberWithCode(verificationId, code);
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+                    signInWithPhoneAuthCredential(credential);
 
                 }else{
                     Toast.makeText(VerifyOTPActivity.this, "Please check internet connection", Toast.LENGTH_SHORT).show();
                 }
-
-                }else {
+                }else{
                     Toast.makeText(VerifyOTPActivity.this, "Invalid code", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -114,8 +115,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull @NotNull PhoneAuthCredential phoneAuthCredential) {
-
-
+                                    signInWithPhoneAuthCredential(phoneAuthCredential);
                             }
 
                             @Override
@@ -236,12 +236,10 @@ public class VerifyOTPActivity extends AppCompatActivity {
         });
     }
 
-    private void verifyPhoneNumberWithCode(String verificationId , String code) {
+
         // [START verify_with_code]
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithPhoneAuthCredential(credential);
-        // [END verify_with_code]
-    }
+
+
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         auth.signInWithCredential(credential)
@@ -257,14 +255,10 @@ public class VerifyOTPActivity extends AppCompatActivity {
                             startActivity(new Intent(VerifyOTPActivity.this,Login.class));
                         } else {
 
-                            startActivity(new Intent(VerifyOTPActivity.this,Login.class));
-
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Log.d(TAG, "signInWithCredential:failure", task.getException());
-                                startActivity(new Intent(VerifyOTPActivity.this,Login.class));
+
                             }
                         }
-                    }
                 });
     }
 }

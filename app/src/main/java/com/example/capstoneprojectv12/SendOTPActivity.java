@@ -53,10 +53,7 @@ public class SendOTPActivity extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull @NotNull PhoneAuthCredential phoneAuthCredential) {
 
-                final String code = phoneAuthCredential.getSmsCode();
-                if(code != null){
-
-                }
+                signInWithPhoneAuthCredential(phoneAuthCredential);
                     progressBar.setVisibility(View.GONE);
                     buttonGetOTP.setVisibility(View.VISIBLE);
                     Log.d(TAG, "onVerificationCompleted:" + phoneAuthCredential);
@@ -87,7 +84,6 @@ public class SendOTPActivity extends AppCompatActivity {
                 intent.putExtra("mobile", inputMobile.getText().toString());
                 intent.putExtra("verificationId", verificationId);
                 startActivity(intent);
-
             }
         };
 
@@ -109,5 +105,24 @@ public class SendOTPActivity extends AppCompatActivity {
                 PhoneAuthProvider.verifyPhoneNumber(options);
             }
         });
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+
+                            FirebaseUser user = task.getResult().getUser();
+                            // Update UI
+                            startActivity(new Intent(SendOTPActivity.this,Login.class));
+                        } else {
+                                Log.d(TAG, "signInWithCredential:failure", task.getException());
+                        }
+                    }
+                });
     }
 }
