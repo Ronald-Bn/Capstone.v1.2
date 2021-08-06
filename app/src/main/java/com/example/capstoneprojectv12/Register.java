@@ -57,8 +57,6 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(this, "Please Enter Your Zip Code", Toast.LENGTH_SHORT).show();
             }else if(!edit_password.getText().toString().trim().equals(edit_confirmpassword.getText().toString().trim())){
                 Toast.makeText(this, "The Password is Not Match", Toast.LENGTH_SHORT).show();
-            }else if(edit_password.getText().toString().trim().length() <= 8){
-                Toast.makeText(this, "Your password must be at least 8 characters", Toast.LENGTH_SHORT).show();
             }
                 else {
                 User users = new User(edit_fullname.getText().toString(), edit_phonenum.getText().toString(), edit_email.getText().toString(), edit_password.getText().toString(), edit_confirmpassword.getText().toString(), edit_address.getText().toString(), edit_zipcode.getText().toString());
